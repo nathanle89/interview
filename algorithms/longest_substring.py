@@ -6,19 +6,26 @@ class Solution(object):
         :rtype: int
         """
         longest_sequence_count = 0
-        skippable_count = 0
+        next_char_index = 1
         for current_index in range(0, len(s)):
             seen_char = {}
+            seen_first_repeating_char = False
             seen_char[s[current_index]] = True
             sequence_count = 1
 
-            if skippable_count > 0:
-                skippable_count -= 1
-                break
+            if next_char_index > current_index + 1:
+                continue
+            else:
+                next_char_index = current_index + 1
 
             for sub_index in range(current_index + 1, len(s)):
-                if s[sub_index] in seen_char:
-                    break
+                if s[sub_index] in seen_char and not seen_first_repeating_char:
+                    seen_first_repeating_char = True
+                elif seen_first_repeating_char:
+                    if s[next_char_index] == s[sub_index]:
+                        next_char_index += 1
+                    else:
+                        break
                 else:
                     seen_char[s[sub_index]] = True
                     sequence_count += 1
