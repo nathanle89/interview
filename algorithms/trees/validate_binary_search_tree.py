@@ -13,11 +13,11 @@ class Solution(object):
         """
         return self.helper(root, -4294967296, 4294967296)
 
-    def helper(self, root, min, max):
+    def helper(self, root, min_val, max_val):
         if root is None:
             return True
 
-        if root.val < min or root.val > max:
+        if root.val < min_val or root.val > max_val:
             return False
 
-        return self.helper(root.left, min, root.val - 1) and self.helper(root.left, root.val + 1, max)
+        return self.helper(root.left, min_val, root.val-1) and self.helper(root.right, root.val+1, max_val)
