@@ -6,21 +6,22 @@ class TreeNode(object):
         self.right = None
 
 class Solution:
-    def printTreeByLevel(self, root):
+    def levelOrder(self, root):
         if root is None:
-            return
+            return []
 
         currentLevel = 0
 
         # BFS
         queue = [(root, 0)]
+        results = []
         current_level_element = []
         while len(queue) > 0:
             current_node, level = queue.pop(0)
             if level == currentLevel:
                 current_level_element.append(current_node.val)
             else:
-                print(current_level_element)
+                results.append(current_level_element)
                 current_level_element = [current_node.val]
                 currentLevel = level
 
@@ -31,9 +32,9 @@ class Solution:
                 queue.append((current_node.right, level + 1))
 
             if len(queue) == 0:
-                print(current_level_element)
+                results.append(current_level_element)
 
-
+        return results
 node1 = TreeNode(1)
 node2 = TreeNode(2)
 node3 = TreeNode(3)
@@ -47,4 +48,4 @@ node2.left = node4
 node2.right = node5
 
 solution = Solution()
-solution.printTreeByLevel(node1)
+print(solution.printTreeByLevel(node1))
