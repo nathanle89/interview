@@ -25,4 +25,4 @@ class Solution(object):
 
 solution = Solution()
 
-print(solution.isPalindrome("race a car"))
+print(solution.isPalindrome("abbabba"))
