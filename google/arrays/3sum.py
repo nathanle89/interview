@@ -4,6 +4,7 @@ class Solution:
         # O(nlogn) operation
         nums.sort()
         length_nums = len(nums)
+        dup_results = set()
         for i in range(0, length_nums - 1): # 0 -> n - 2
             a = nums[i]
             start = i + 1
@@ -14,9 +15,12 @@ class Solution:
                 c = nums[end]
                 total_sum = a + b + c
                 if total_sum == total:
-                    results.append((a, b, c))
+                    key = str(a) + str(b) + str(c)
+                    if key not in dup_results:
+                        results.append([a, b, c])
+                        dup_results.add(key)
 
-                    if nums[b+1] == b:
+                    if nums[start+1] == b:
                         start = start + 1
                     else:
                         end = end - 1
