@@ -22,47 +22,35 @@ class Solution(object):
         if length_s == 0:
             return ""
 
-        bytearray_s = bytearray(s, 'utf8')
+        rev_s = s[::-1]
+        giant_string = s + "#" + rev_s # This Trick for '#' is used to force the longest possible suffix of Reversed String and longest possible prefix of Original String
+        kmp_matching_table = self.partial_matching_table(giant_string)
 
-        leading_index = 0
-        trailing_index = length_s - 1
+        number_of_char_to_remove = kmp_matching_table[-1]
+        return rev_s[:-number_of_char_to_remove] + s
 
-        while leading_index < trailing_index:
-            if chr(bytearray_s[leading_index]) != chr(bytearray_s[trailing_index]):
-                bytearray_s.insert(leading_index, bytearray_s[trailing_index])
-                trailing_index += 1
-            else:
-                leading_index += 1
-                trailing_index -= 1
-
-        return str(bytearray_s)
-
-    def shortestPalindrome2(self, s):
-        """
-        :type s: str
-        :rtype: str
-        """
-        r = s[::-1]
-        if r == s:
-            return s
-        kmp = [0] * len(s)
+    def partial_matching_table(self, string):
+        kmp = [0] * len(string)
         i = 0
         j = 1
-        while j < len(s):
-            if r[j] == s[i]:
+
+        while j < len(string):
+            if string[i] == string[j]:
+                kmp[j] = i + 1
                 i += 1
-                kmp[j] = i
                 j += 1
             else:
                 if i > 0:
-                    i = kmp[i-1]
+                    i = kmp[i - 1]
                 else:
                     kmp[j] = 0
                     j += 1
-        pre = r[:len(r) - kmp[-1]]
-        return pre + s
+
+        return kmp
+
 
 solution = Solution()
 
 print(solution.shortestPalindrome("aabba"))
-print(solution.shortestPalindrome2("aabba"))
+
+# print (solution.partial_matching_table("aabaabaaa"))
