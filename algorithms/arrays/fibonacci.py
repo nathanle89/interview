@@ -22,6 +22,29 @@ class Solution(object):
 
         return result
 
+    def fibonacciDP(self, k):
+        return self.helper(k, {})
+
+    def helper(self, k, memo):
+        if k in memo:
+            return memo[k]
+        if k == 0:
+            return 0
+        elif k == 1:
+            return 1
+        elif k == 2:
+            return 1
+
+        left = self.helper(k - 1, memo)
+        memo[k - 1] = left
+
+        right = self.helper(k - 2, memo)
+        memo[k - 2] = right
+
+        return left + right
+
+
 solution = Solution()
 
-print(solution.fibonacci(110))
+print(solution.fibonacci(1500))
+print(solution.fibonacciDP(1500)) ## BANH DZU stack overflow
