@@ -1,3 +1,6 @@
+import resource, sys
+sys.setrecursionlimit(10**6)
+
 class Solution(object):
     def fibonacci(self, k):
         """
