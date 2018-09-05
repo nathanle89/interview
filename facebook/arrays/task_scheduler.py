@@ -16,6 +16,8 @@ The integer n is in the range [0, 100].
 
 """
 
+import heapq
+
 class Solution(object):
     def leastInterval(self, tasks, n):
         """
@@ -23,20 +25,49 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
+        operation_counter = 0
         task_counter = {}
-        task_clock_counter = {}
+        max_queue = []
+
         for task in tasks:
             task_counter[task] = task_counter.get(task, 0) + 1
-            task_clock_counter[task] = 0
 
-        while len(task_counter.keys()) > 0:
+        for task in task_counter.keys():
+            heapq.heappush(max_queue, (-task_counter[task], task))
 
+        while len(max_queue) > 0:
+            clock_counter = 0
+            temp = []
+            while clock_counter <= n:
+                if len(max_queue) > 0:
+                    priority, current_task = heapq.heappop(max_queue)
+
+                    task_counter[current_task] -= 1
+                    if task_counter[current_task] == 0:
+                        del task_counter[current_task]
+                    else:
+                        temp.append((-task_counter[current_task], current_task))
+
+                operation_counter += 1
+
+                if len(max_queue) == 0 and len(temp) == 0:
+                    break
+
+                clock_counter += 1
+
+            for task_tuple in temp:
+                heapq.heappush(max_queue, task_tuple)
+
+        return operation_counter
 
 
 #IN PROGRESSSSSSSS
 
 
 solution = Solution()
+
+tasks = ["A","B","C","A","B"]
+n = 2
 
 tasks = ["A","A","A","B","B","B"]
 n = 2

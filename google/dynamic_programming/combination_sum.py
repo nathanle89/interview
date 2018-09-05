@@ -33,27 +33,32 @@ class Solution(object):
         :type target: int
         :rtype: List[List[int]]
         """
-        return self.helper(candidates, [], target, {})
+        return self.helper(candidates, [], 0, target, {})
 
-    def helper(self, candidates, current_combination, target, memo):
+    def helper(self, candidates, current_combination, i, target, memo):
         if target == 0:
             return [current_combination]
-        if target in memo:
-            return memo[target]
+        # if key in memo:
+        #     return memo[key]
+        if i == len(candidates):
+            return [] # Fail to build
 
         results = []
-        for candidate in candidates:
-            if candidate <= target:
-                new_combination = list(current_combination)
-                new_combination.append(candidate)
-                results.extend(self.helper(candidates, new_combination, target - candidate, memo))
 
-        memo[target] = results
+        if candidates[i] <= target:
+            # Use i
+            new_combination = list(current_combination)
+            new_combination.append(candidates[i])
+            use_i_results = self.helper(candidates, new_combination, i, target - candidates[i], memo)
+            results.extend(use_i_results)
+
+        # Dont use i
+        new_combination = list(current_combination)
+        dont_use_i_results = self.helper(candidates, new_combination, i+1, target, memo)
+        results.extend(dont_use_i_results)
 
         return results
 
-#IN PROGRESSSSSSSS
-
 solution = Solution()
 
-print solution.combinationSum([2,3,6,7], 7)
+print solution.combinationSum([1,2], 4)
