@@ -32,8 +32,9 @@ node2.next = node3
 node3.next = node4
 
 solution = Solution()
-solution.deleteNode(node3)
+solution.deleteNode(node4)
 
 print(node1.val)
 print(node1.next.val)
 print(node1.next.next.val)
+print(node1.next.next.next.val)
