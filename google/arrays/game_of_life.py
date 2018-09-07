@@ -29,12 +29,29 @@ class Solution(object):
 
         for i in range(0, row_length):
             for j in range(0, col_length):
+                neighbors = 0
+                if i + 1 < row_length:
+                    neighbors += board[i + 1][j]
+                if j + 1 < col_length:
+                    neighbors += board[i][j+1]
+                if i + 1 < row_length and j + 1 < col_length:
+                    neighbors += board[i + 1][j + 1]
+                if i - 1 >= 0:
+                    neighbors += board[i - 1][j]
+                if j -1 >= 0:
+                    neighbors += board[i][j - 1]
+                if i - 1 >= 0 and j -1 >= 0:
+                    neighbors += board[i - 1][j - 1]
+                if i - 1 >= 0 and j + 1 < col_length:
+                    neighbors += board[i - 1][j + 1]
+                if i + 1 < row_length and j - 1 >= 0:
+                    neighbors += board[i + 1][j - 1]
 
-                    neighbors = board[i + 1][j] + board[i][j+1] + board[i + 1][j + 1]
-                    val = self.getNextStateByNeighborsValue(board[i][j], neighbors)
-                    next_state[i][j] = val
-
-        return next_state
+                val = self.getNextStateByNeighborsValue(board[i][j], neighbors)
+                next_state[i][j] = val
+        for i in range(0, row_length):
+            for j in range(0, col_length):
+                board[i][j] = next_state[i][j]
 
     def getNextStateByNeighborsValue(self, current_cel, neighbor_sum):
         if current_cel == 1:
