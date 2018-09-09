@@ -51,7 +51,7 @@ class Solution(object):
     def bfs(self, start, end, graph):
         queue = [(start, 1.0)]
         visited = set([start])
-        if start not in graph:
+        if start not in graph or end not in graph:
             return -1.0
 
         while len(queue) > 0:
