@@ -16,53 +16,58 @@ queries = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ].
 The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.
 """
 
+class Pair(object):
+    def __init__(self, dividend, value):
+        self.dividend = dividend
+        self.value = value
+
 class Solution(object):
     def calcEquation(self, equations, values, queries):
-        """
-        :type equations: List[List[str]]
-        :type values: List[float]
-        :type queries: List[List[str]]
-        :rtype: List[float]
-        """
-        results = {}
-        variable_set = set()
-        for i in range(len(equations) - 1):
-            equation1 = equations[i]
-            value1 = values[i]
-            results[equation1[0] + equation1[1]] = value1
-            results[equation1[1] + equation1[0]] = 1./value1
-            variable_set.add(equation1[0])
-            variable_set.add(equation1[1])
-            for j in range(i + 1, len(equations)):
-                equation2 = equations[j]
-                value2 = values[j]
-                results[equation2[0] + equation2[1]] = value2
-                variable_set.add(equation2[0])
-                variable_set.add(equation2[1])
-                if equation1[0] == equation2[1]:
-                    results[equation2[0] + equation1[1]] = value1 * value2
-                if equation1[1] == equation2[0]:
-                    results[equation1[0] + equation2[1]] = value1 * value2
-                if equation1[0] == equation2[0]:
-                    results[equation2[1] + equation1[1]] = value1 * 1./value2
-                    results[equation1[1] + equation2[1]] = 1./value1 * value2
-                if equation1[1] == equation2[1]:
-                    results[equation2[0] + equation1[0]] = 1./value1 * value2
-                    results[equation1[0] + equation2[0]] = value1 * 1./value2
+        graph = {}
 
-        out = []
+        # Build graph from input equations
+        for i in range(len(equations)):
+            equation = equations[i]
+            value = values[i]
+
+            if equation[0] not in graph:
+                graph[equation[0]] = []
+            if equation[1] not in graph:
+                graph[equation[1]] = []
+
+            graph[equation[0]].append(Pair(equation[1], value))
+            graph[equation[1]].append(Pair(equation[0], 1.0/value))
+
+        # Answering queries by using BFS
+        results = []
         for query in queries:
-            key = query[0] + query[1]
-            if query[0] not in variable_set or query[1] not in variable_set:
-                out.append(-1.0)
-            elif query[0] == query[1]:
-                out.append(1.0)
-            elif key in results:
-                out.append(results[key])
-            else:
-                out.append(-1.0)
+            start = query[0]
+            end = query[1]
 
-        return out
+            results.append(self.bfs(start, end, graph))
+
+        return results
+
+    def bfs(self, start, end, graph):
+        queue = [(start, 1.0)]
+        visited = set([start])
+        if start not in graph:
+            return -1.0
+
+        while len(queue) > 0:
+            current_node, value = queue.pop(0)
+
+            if current_node == end:
+                return value
+
+            neighbors = graph[current_node]
+            for neighbor in neighbors:
+                if neighbor.dividend in visited:
+                    continue
+                visited.add(neighbor.dividend)
+                queue.append((neighbor.dividend, value * neighbor.value))
+
+        return -1.0
 
 solution = Solution()
 
