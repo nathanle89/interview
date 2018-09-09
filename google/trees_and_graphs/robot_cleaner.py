@@ -80,7 +80,29 @@ class Solution(object):
         :type robot: Robot
         :rtype: None
         """
+        visited = set()
+        self.dfs(robot, 0, 0, 0, 1, visited)
 
+    def dfs(self, robot, x, y, direction_x, direction_y, visited):
+        robot.clean()
+        visited.add((x, y))
+
+        for k in range(4):
+            new_x = x + direction_x
+            new_y = y + direction_y
+
+            if (new_x, new_y) not in visited and robot.move():
+                self.dfs(robot, new_x, new_y, direction_x, direction_y, visited)
+                # Backtrack to the previous location
+                robot.turnLeft()
+                robot.turnLeft()
+                robot.move()
+
+                # turn back to its previous orientation
+                robot.turnLeft()
+                robot.turnLeft()
+            robot.turnLeft() # this help the robot turn to the new orientation
+            direction_x, direction_y = -direction_y, direction_x
 room = [
            [1,1,1,1,1,0,1,1],
            [1,1,1,1,1,0,1,1],
