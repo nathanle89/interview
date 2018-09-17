@@ -22,17 +22,13 @@ class Solution(object):
         Returns a random shuffling of the array.
         :rtype: List[int]
         """
-        current_length = len(self.current)
-        copied_original = list(self.original)
-        randomized_list = []
-        while len(copied_original) > 0:
-            random_generate_index = random.randint(0, current_length - 1)
-            randomized_list.append(copied_original[random_generate_index])
-            del copied_original[random_generate_index]
-            current_length -= 1
+        for i in range(0, len(self.current)):
+            random_index = random.randint(0, len(self.current) - 1)
+            temp = self.current[i]
+            self.current[i] = self.current[random_index]
+            self.current[random_index] = temp
 
-        return randomized_list
-
+        return self.current
 nums = [1,2,3]
 solution = Solution(nums)
 

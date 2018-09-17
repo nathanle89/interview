@@ -42,5 +42,5 @@ class Solution:
 
 solution = Solution()
 
-print solution.coinChangeCount([1,2,5], 900)
-print solution.coinChangeCountIterative([1,2,5], 1000)
+print solution.coinChangeCount([1,2,5], 5)
+print solution.coinChangeCountIterative([1,2,5], 5)

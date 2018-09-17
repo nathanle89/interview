@@ -1,24 +1,23 @@
 class Solution:
     def productExceptSelf(self, nums):
-        if not nums:
+        if len(nums) == 0:
             return []
 
-        product_left = 1
-        product_right = 1
-        length_nums = len(nums)
-        # left to right
-        results = [1] * length_nums
+        # first pass
+        temp_array = [1] * len(nums)
+        current_product = 1
+        for i in range(len(nums)):
+            current_product *= nums[i]
+            if i < len(nums) - 1:
+                temp_array[i + 1] = current_product
 
-        for i in range(0, length_nums):
-            results[i] = product_left
-            product_left *= nums[i]
+        current_product = 1
+        for i in reversed(range(len(nums))):
+            current_product *= nums[i]
+            if i > 0:
+                temp_array[i - 1] = current_product * temp_array[i - 1]
 
-        # right to left
-        for i in reversed(range(0, length_nums)):
-            results[i] *= product_right
-            product_right *= nums[i]
-
-        return results
+        return temp_array
 
 solution = Solution()
-print(solution.productExceptSelf([1,2,3,4]))
+print(solution.productExceptSelf([2,3,4,5]))
