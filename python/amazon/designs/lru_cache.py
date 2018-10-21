@@ -1,7 +1,7 @@
 class DoubleLinkedNode(object):
 
-    def __init__(self, val):
-        self.val = val
+    def __init__(self, key):
+        self.key = key
         self.previous = None
         self.next = None
 
@@ -47,7 +47,7 @@ class LRUCache(object):
         current_size = len(self.cache)
         if current_size == self.capacity:
             # kick stuff out
-            del self.cache[self.head.val]
+            del self.cache[self.head.key]
             current_head = self.head
             self.head = current_head.next
             current_head.next = None # Dereference
