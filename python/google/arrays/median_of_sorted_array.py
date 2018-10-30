@@ -1,80 +1,70 @@
-class Solution(object):
+class Solution:
     def findMedianSortedArrays(self, nums1, nums2):
-        """
-        :type nums1: List[int]
-        :type nums2: List[int]
-        :rtype: float
-        """
+        if len(nums1) == 0:
+            return self.medianOfArray(nums2)
 
-        length_nums1 = len(nums1)
-        length_nums2 = len(nums2)
+        if len(nums2) == 0:
+            return self.medianOfArray(nums1)
 
-        total_length = length_nums1 + length_nums2
-        is_even = False
-        if total_length % 2 == 0:
-            is_even = True
-
-        median_index = total_length / 2 # round down
-
-        nums1_index = 0
-        nums2_index = 0
-        current_counter = -1
-        current_val = -1
-        previous_val = -1
-
-        while nums1_index < length_nums1 and nums2_index < length_nums2:
-            if nums1[nums1_index] <= nums2[nums2_index]:
-                previous_val = current_val
-                current_val = nums1[nums1_index]
-                nums1_index += 1
-            else:
-                previous_val = current_val
-                current_val = nums2[nums2_index]
-                nums2_index += 1
-            current_counter += 1
-
-            if current_counter == median_index:
-                return self.computeResult(current_val, previous_val, is_even)
-
-        if current_counter < median_index:
-            if nums1_index == length_nums1:
-                while nums2_index < length_nums2:
-                    previous_val = current_val
-                    current_val = nums2[nums2_index]
-                    nums2_index += 1
-                    current_counter += 1
-                    if current_counter == median_index:
-                        return self.computeResult(current_val, previous_val, is_even)
-
-            else:
-                while nums1_index < length_nums1:
-                    previous_val = current_val
-                    current_val = nums1[nums1_index]
-                    nums1_index += 1
-                    current_counter += 1
-                    if current_counter == median_index:
-                        return self.computeResult(current_val, previous_val, is_even)
-                # nums1 has more to go
-
-    def computeResult(self, current_val, previous_val, is_even):
-        if is_even:
-            return (current_val + previous_val)/2.
+        if len(nums1) <= len(nums2):
+            smaller_array = nums1
+            larger_array = nums2
         else:
-            return float(current_val)
+            smaller_array = nums2
+            larger_array = nums1
+        total_length = len(smaller_array) + len(larger_array)
+        total_even = False
+        if total_length % 2 == 0:
+            total_even = True
 
+        start = 0
+        end = len(smaller_array)
 
-solution = Solution()
+        while start <= end:
+            partition_X = (start + end)/2
+            partition_Y = (len(smaller_array) + len(larger_array) + 1)/2 - partition_X
 
-nums1 = [1, 3]
-nums2 = [2]
+            max_left_x = None
+            max_left_y = None
+            min_right_x = None
+            min_right_y = None
 
-nums3 = [1, 2]
-nums4 = [3, 4]
+            if partition_X == 0:
+                max_left_x = -2**31 # -Infinity
+            if partition_Y == 0:
+                max_left_y = -2**31 # -Infinity
+            if partition_X == len(smaller_array):
+                min_right_x = 2**31 # Infinity
+            if partition_Y == len(larger_array):
+                min_right_y = 2**31 # Infinity
 
-nums7 = [3]
-nums8 = [1,2,4, 5, 6]
+            if max_left_x is None:
+                max_left_x = smaller_array[partition_X - 1]
+            if max_left_y is None:
+                max_left_y = larger_array[partition_Y - 1]
+            if min_right_x is None:
+                min_right_x = smaller_array[partition_X]
+            if min_right_y is None:
+                min_right_y = larger_array[partition_Y]
 
-nums5 = []
-nums6 = [1]
+            if max_left_x <= min_right_y and max_left_y <= min_right_x:
+                if total_even:
+                    return sum([max(max_left_x, max_left_y), min(min_right_x, min_right_y)])/2.0
+                else:
+                    return max(max_left_x, max_left_y)
+            elif max_left_x > min_right_y:
+                end = partition_X - 1
+            else:
+                start = partition_X + 1
 
-print(solution.findMedianSortedArrays(nums1, nums2))
+    def medianOfArray(self, nums):
+        if len(nums) == 1:
+            return nums[0]
+        if len(nums) == 2:
+            return (nums[0] + nums[1])/2.0
+
+        mid = len(nums)/2
+        if len(nums) % 2 == 0:
+            return (nums[mid] + nums[mid - 1])/2.0
+        else:
+            return nums[mid]
